@@ -1,0 +1,34 @@
+<script	src="https://cdn.socket.io/socket.io-1.0.0.js"></script>
+<script>
+	var	socket	=	io('http://localhost:2000');
+	
+	var notify = function(data){
+		var id = "notify_"+data.email
+		var notify = document.getElementById(id);
+		console.log(notify)
+		if (notify) {
+			notify.textContent = data.msg
+		}
+	}
+
+	socket.on("client-onlines", function(email){
+		console.log("notify online: "+email)
+		notify({email: email, msg: 'Online'})
+	})
+
+	socket.on("client-offlines", function(email){
+		console.log("notify offline: "+email)
+		notify({email: email, msg: 'Offline'})
+	})
+
+	socket.on("new-message", function(data){
+		notify({email: data.email, msg: "Mensagem"})
+		var id = "chat_"+data.email;
+		console.log(id)
+		var chat = document.getElementById(id);
+		chat.href += "?sala="+data.sala
+		console.log(chat.href)
+
+	})
+
+</script>
